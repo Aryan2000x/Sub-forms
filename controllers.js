@@ -30,11 +30,10 @@ function submit(req, res) {
 	db.query(query, (err, result) => {
 		console.log(req.body);
 		
-		if (err || !result[0]['MAX(id)']){
+		if (err || !result[0]['max(id)']){
 			id = 1;
 		} else {
-			console.print("this should print out")
-			id = result[0]['MAX(id)']+1;
+			id = result[0]['max(id)']+1;
 		}
 		if (file.originalname)
 			file.filename = `${file.fieldname}_${id}${path.extname(file.originalname)}`;
