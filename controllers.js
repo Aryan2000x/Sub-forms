@@ -4,21 +4,6 @@ const {PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const { Upload } = require('@aws-sdk/lib-storage');
 const path = require('path');
 
-// const storage = multer.diskStorage({
-//   destination: "./files/",
-//   filename:(req,file,cb) => {
-// 		const query = `SELECT MAX(id) FROM submissions`;
-// 		let id;
-// 		db.query(query, (err, result) => {
-// 			id = result[0]['MAX(id)']+1;
-// 			if (err) console.log('query cannot find the max id')
-//     	return cb(null, `${file.fieldname}_${id}${path.extname(file.originalname)}`)
-// 		})
-//   }
-// })
-// const upload = multer({
-// 	storage: storage,
-// }).single("fileUpload");
 const bucketName = process.env.BUCKET;
 const region = process.env.REGION;
 const accessKeyId = process.env.ACCESS_KEY;
