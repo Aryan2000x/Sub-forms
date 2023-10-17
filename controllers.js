@@ -26,12 +26,14 @@ function submit(req, res) {
 	const { name, department, email, employment} = req.body;
 	const file = setQuery(req.file);
 	const query = `SELECT MAX(id) FROM submissions`;
-	
+	let id;
 	db.query(query, (err, result) => {
 		console.log(req.body);
+		
 		if (err || !result[0]['MAX(id)']){
 			id = 1;
 		} else {
+			console.print("this should print out")
 			id = result[0]['MAX(id)']+1;
 		}
 		if (file.originalname)
