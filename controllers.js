@@ -1,7 +1,6 @@
 const db = require("./database");
 const multer = require('multer');
 const {PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
-const { Upload } = require('@aws-sdk/lib-storage');
 const path = require('path');
 
 const bucketName = process.env.BUCKET;
