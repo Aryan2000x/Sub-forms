@@ -21,41 +21,46 @@ function form(req, res) {
 	res.render("./form")
 }
 
-function submit(req, res) {
+async function submit(req, res) {
 
-	const { name, department, email, employment} = req.body;
-	const file = setQuery(req.file);
-	const query = `SELECT MAX(id) FROM submissions`;
-	let id;
-	db.query(query, (err, result) => {
-		console.log(req.body);
-		
-		if (err || !result[0]['max(id)']){
-			id = 1;
-		} else {
-			id = result[0]['max(id)']+1;
-		}
-		if (file.originalname)
-			file.filename = `${file.fieldname}_${id}${path.extname(file.originalname)}`;
-		else 
-			file.filename = null;
-
-		const insertQuery = 'INSERT INTO submissions (name, department, email, fileUpload, fileoriginalname, employment) VALUES (?, ?, ?, ?, ?, ?)';
-		db.query(insertQuery, [name, department, email, file.filename, file.originalname, employment], (err, result) => {
-			if (err) throw err;
-			console.log('Submission successful');
-			if (file.originalname){
-				console.log(file);
-				const params = setParams(file.buffer, file.filename, file.mimetype);
-				uploadFile(params);
-			}
-		});
+	try {
+		const { name, department, email, employment} = await req.body;
+		const file = await setQuery(req.file);
+		const query = `SELECT MAX(id) FROM submissions`;
+		let id;
+		 db.query(query, (err, result) => {
+			console.log(req.body);
 			
-	})
+			if (err || !result[0]['max(id)']){
+				id = 1;
+			} else {
+				id = result[0]['max(id)']+1;
+			}
+			if (file.originalname)
+				file.filename = `${file.fieldname}_${id}${path.extname(file.originalname)}`;
+			else 
+				file.filename = null;
+
+			const insertQuery = 'INSERT INTO submissions (name, department, email, fileUpload, fileoriginalname, employment) VALUES (?, ?, ?, ?, ?, ?)';
+			db.query(insertQuery, [name, department, email, file.filename, file.originalname, employment], (err, result) => {
+				if (err) throw err;
+				console.log('Submission successful');
+				if (file.originalname){
+					console.log(file);
+					const params = setParams(file.buffer, file.filename, file.mimetype);
+					uploadFile(params);
+				}
+			});
+
+		})
+	} catch (error) {
+		console.log(error)
+	}
 
 	
 	res.redirect('/')
 }
+
 
 function search(req, res){
 	console.log('GET /search')
@@ -87,7 +92,7 @@ module.exports = {
 	submit,
 	form,
 	search,
-	submit,
+	submit
 }
 
 function setQuery(file){
